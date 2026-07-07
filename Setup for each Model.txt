@@ -12,6 +12,7 @@
 
 # Important note: Make sure you download the checkpoints for each model and place them in the specific folder
 # Ignore pasting the git clone, from the main repo's of the models, rather just git clone this.
+# The models will require you to create a folder either called "checkpoint" or "checkpoints" and for samd3d-objects you need checkpoints/hf to put the checkpoints inside of. (Aswell download the checkpoints from either the huggingface files or the github for each listed.)
 
 In PowerShell:
 	Install Ubuntu WSL: wsl --install
