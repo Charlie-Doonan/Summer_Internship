@@ -1,0 +1,86 @@
+	https://github.com/facebookresearch/segment-anything
+	https://huggingface.co/docs/transformers/en/model_doc/sam
+
+	https://github.com/facebookresearch/sam3
+	https://huggingface.co/facebook/sam3
+
+	https://github.com/facebookresearch/sam-3d-objects
+	https://huggingface.co/facebook/sam-3d-objects
+
+	https://github.com/facebookresearch/vggt-omega
+	https://huggingface.co/spaces/facebook/vggt-omega
+
+# Important note: Make sure you download the checkpoints for each model and place them in the specific folder
+# Ignore pasting the git clone, from the main repo's of the models, rather just git clone this.
+
+In PowerShell:
+	Install Ubuntu WSL: wsl --install
+
+Create the project folder (Using Ubuntu):
+	cd ~
+	mkdir -p projects
+	cd projects
+
+Install Git LFS
+	sudo apt update
+	sudo apt install git-lfs -y
+	git lfs install
+
+SAM:
+----------------------------
+conda create -n segment-anything python=3.10 -y
+conda activate segment-anything
+git clone https://github.com/facebookresearch/segment-anything.git
+cd segment-anything
+pip install -e .
+pip install opencv-python pycocotools matplotlib onnxruntime onnx
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+python scripts/segment_stem.py
+
+SAM3
+----------------------------
+conda create -n sam3 python=3.12 -y
+conda activate sam3
+pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+git clone https://github.com/facebookresearch/sam3.git
+cd sam3
+pip install -e .
+pip install transformers
+python segment_stem.py
+
+
+VGGT-Omega
+----------------------------
+conda create -n vggt-omega python=3.12 -y
+conda activate vggt-omega
+git clone https://github.com/facebookresearch/vggt-omega.git
+cd vggt-omega
+pip install -r requirements.txt
+pip install -e .
+pip install -r requirements_demo.txt
+conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia -y
+set KMP_DUPLICATE_LIB_OK=TRUE
+python depth.py
+
+
+SAM3D-Objects
+----------------------------
+cd ~
+cd projects
+git clone https://github.com/facebookresearch/sam-3d-objects.git
+cd sam-3d-objects
+conda install -n base -c conda-forge mamba -y
+mamba env create -f environments/default.yml
+eval "$(mamba shell hook --shell bash)"
+mamba activate sam3d-objects
+export PIP_EXTRA_INDEX_URL="https://pypi.ngc.nvidia.com https://download.pytorch.org/whl/cu121"
+pip install -e .
+pip install -e '.[p3d]'
+export PIP_FIND_LINKS="https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.1_cu121.html"
+pip install -e '.[inference]'
+./patching/hydra
+pip install kaolin==0.17.0 --extra-index-url https://nvidia-kaolin.s3.us-east-2.amazonaws.com
+pip install "gsplat @ git+https://github.com/nerfstudio-project/gsplat.git@2323de5905d5e90e035f792fe65bad0fedd413e7"
+pip install seaborn==0.13.2
+pip install gradio==5.49.0
+python segment_plant.py
